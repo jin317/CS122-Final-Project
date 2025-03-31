@@ -1,1 +1,9 @@
-print("testing testing")
+import tkinter as tk
+
+root = tk.Tk()
+root.mainloop()
+
+
+
+
+print("working fine")
