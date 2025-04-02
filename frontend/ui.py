@@ -63,6 +63,112 @@ class Cloud:
         self.cloud = self.create_cloud()
 
 
+class Diver:
+    def __init__(self, canvas, width, height):
+        self.canvas = canvas
+        self.width = width
+        self.height = height
+
+        # Starting position (centered horizontally, at the top)
+        self.x = width // 2
+        self.y = -50  # Start above the visible area
+
+        # Size of the diver
+        self.size = 40
+
+        # Falling speed
+        self.speed = 3.2
+
+        # Rotation angle (for spinning effect)
+        self.angle = 78
+        self.spin_speed = 5
+
+        # Create the stickman
+        self.parts = self.create_diver()
+
+    def create_diver(self):
+        # Calculate relative positions based on size
+        head_radius = self.size // 4
+        body_length = self.size
+        limb_length = self.size // 1.5
+
+        # Draw head (circle)
+        head = self.canvas.create_oval(
+            self.x - head_radius, self.y - head_radius,
+            self.x + head_radius, self.y + head_radius,
+            fill="black", outline="black"
+        )
+
+        # Draw body (line)
+        body = self.canvas.create_line(
+            self.x, self.y + head_radius,
+            self.x, self.y + head_radius + body_length,
+            fill="black", width=2
+        )
+
+        # Draw arms
+        left_arm = self.canvas.create_line(
+            self.x, self.y + head_radius + body_length // 3,
+                    self.x - limb_length, self.y + head_radius + body_length // 2,
+            fill="black", width=2
+        )
+
+        right_arm = self.canvas.create_line(
+            self.x, self.y + head_radius + body_length // 3,
+                    self.x + limb_length, self.y + head_radius + body_length // 2,
+            fill="black", width=2
+        )
+
+        # Draw legs
+        left_leg = self.canvas.create_line(
+            self.x, self.y + head_radius + body_length,
+                    self.x - limb_length, self.y + head_radius + body_length + limb_length,
+            fill="black", width=2
+        )
+
+        right_leg = self.canvas.create_line(
+            self.x, self.y + head_radius + body_length,
+                    self.x + limb_length, self.y + head_radius + body_length + limb_length,
+            fill="black", width=2
+        )
+
+        return [head, body, left_arm, right_arm, left_leg, right_leg]
+
+    def move(self):
+        # Update position
+        self.y += self.speed
+
+        self.angle = (self.angle + self.spin_speed) % 360
+
+        # Move all parts down
+        for part in self.parts:
+            self.canvas.move(part, 0, self.speed)
+
+        # Optionally add spin/rotation effect
+        self.angle += self.spin_speed
+        if self.angle >= 360:
+            self.angle = 0
+
+        # Reset if diver goes off screen
+        if self.y > self.height + 100:
+            self.reset()
+
+    def reset(self):
+        # Remove old diver
+        for part in self.parts:
+            self.canvas.delete(part)
+
+        # Reset position to top
+        self.x = random.randint(100, self.width - 100)
+        self.y = -50
+
+        # Create new diver
+        self.parts = self.create_diver()
+
+
+
+
+
 class HangmanGame:
     def __init__(self, root):
         self.root = root
@@ -80,6 +186,10 @@ class HangmanGame:
         for _ in range(8):  # Create 8 clouds
             self.clouds.append(Cloud(self.canvas, 600, 800))
 
+        self.divers = []
+        for _ in range(1,3):
+            self.divers.append(Diver(self.canvas, 600, 800))
+
         # Title
         self.title = self.canvas.create_text(300, 100, text="The Hangman Game",
                                              font=("Impact", 35, "bold"), fill="black")
@@ -89,6 +199,7 @@ class HangmanGame:
 
         # Start animation
         self.animate()
+
 
     def create_rounded_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
         """Create a rounded rectangle on a canvas"""
@@ -134,6 +245,8 @@ class HangmanGame:
 
 
 
+
+
         # Bind hover events
         self.canvas.tag_bind("play_btn", "<Enter>", lambda e: self.button_hover_effect("play", True))
         self.canvas.tag_bind("play_btn", "<Leave>", lambda e: self.button_hover_effect("play", False))
@@ -147,15 +260,12 @@ class HangmanGame:
     def button_hover_effect(self, btn_type, hovering):
         """Apply hover effect without moving the button"""
         bg_tag = f"{btn_type}_btn_bg"
-        shine_tag = f"{btn_type}_shine"
 
         if hovering:
-            self.canvas.itemconfig(bg_tag, fill="lightblue" , width=6)
-            self.canvas.itemconfig(shine_tag, fill="#e1f5fe")
+            self.canvas.itemconfig(bg_tag, fill="lightblue", width=9)
         else:
             # Return to normal state
             self.canvas.itemconfig(bg_tag, fill="white", width=2)
-            self.canvas.itemconfig(shine_tag, fill="#add8e6")
 
 
     def play_btn(self, event=None):
@@ -165,9 +275,11 @@ class HangmanGame:
         self.root.destroy()
 
     def animate(self):
-        # Move all clouds
         for cloud in self.clouds:
             cloud.move()
+
+        for diver in self.divers:
+            diver.move()
 
         # Schedule next animation frame
         self.root.after(30, self.animate)
