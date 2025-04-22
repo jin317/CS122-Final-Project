@@ -5,14 +5,14 @@ from tkinter import messagebox
 class GameScreen:
     def __init__(self, root):
         self.root = root
-        self.root.geometry("600x800")
+        self.root.geometry("800x800")
         self.root.resizable(False, False)
 
-        self.canvas = tk.Canvas(self.root, width=600, height=800, highlightthickness=0)  # Sky blue color
+        self.canvas = tk.Canvas(self.root, width=800, height=800, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         og_image = Image.open("background.jpeg")
-        resized_image = og_image.resize((600, 800), Image.LANCZOS)
+        resized_image = og_image.resize((800, 800), Image.LANCZOS)
         self.photo = ImageTk.PhotoImage(resized_image)
         self.canvas.create_image(0,0,image=self.photo, anchor="nw")
 
