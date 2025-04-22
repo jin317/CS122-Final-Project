@@ -1,6 +1,5 @@
 import tkinter as tk
 import random
-import time
 
 
 class Cloud:
@@ -235,7 +234,6 @@ class HangmanGame:
         exit_hitbox = self.canvas.create_rectangle(215, 680, 385, 730,
                                                    fill="", outline="",
                                                    width=0, tags="exit_btn")
-
 
 
 
