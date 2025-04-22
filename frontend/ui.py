@@ -1,5 +1,4 @@
 import tkinter as tk
-import customtkinter as ctk
 import random
 import time
 
@@ -92,7 +91,6 @@ class Diver:
         body_length = self.size
         limb_length = self.size // 1.5
 
-        # Draw head (circle)
         head = self.canvas.create_oval(
             self.x - head_radius, self.y - head_radius,
             self.x + head_radius, self.y + head_radius,
@@ -144,7 +142,6 @@ class Diver:
         for part in self.parts:
             self.canvas.move(part, 0, self.speed)
 
-        # Optionally add spin/rotation effect
         self.angle += self.spin_speed
         if self.angle >= 360:
             self.angle = 0
@@ -158,15 +155,11 @@ class Diver:
         for part in self.parts:
             self.canvas.delete(part)
 
-        # Reset position to top
         self.x = random.randint(100, self.width - 100)
         self.y = -50
 
         # Create new diver
         self.parts = self.create_diver()
-
-
-
 
 
 class HangmanGame:
@@ -220,7 +213,7 @@ class HangmanGame:
         return self.canvas.create_polygon(points, **kwargs, smooth=True)
 
     def create_buttons(self):
-        # Create button backgrounds with gradients for 3D effect
+        # button backgrounds with gradients for 3D effect
         play_btn_bg = self.create_rounded_rectangle(215, 600, 385, 650, radius=25,
                                                     fill="white", outline="lightblue",
                                                     width=2, tags="play_btn_bg")
@@ -235,7 +228,7 @@ class HangmanGame:
                                                 font=("Comic Sans MS", 25, "bold"),
                                                 fill="black", tags="exit_btn_text")
 
-        # Create transparent areas for better mouse detection
+        # transparent areas for better mouse detection
         play_hitbox = self.canvas.create_rectangle(215, 600, 385, 650,
                                                    fill="", outline="",
                                                    width=0, tags="play_btn")
@@ -270,6 +263,12 @@ class HangmanGame:
 
     def play_btn(self, event=None):
         print("starting game..")
+        self.root.destroy()
+
+        from frontend.game_screen import GameScreen
+        new_root = tk.Tk()
+        game = GameScreen(new_root)
+        new_root.mainloop()
 
     def exit_btn(self, event=None):
         self.root.destroy()
