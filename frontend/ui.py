@@ -35,16 +35,19 @@ class Cloud:
         return [oval1, oval2, oval3]
 
     def move(self):
+        # Move cloud upward
         for part in self.cloud:
             self.canvas.move(part, 0, -self.speed)
 
+        # Update y position
         self.y -= self.speed
 
+        # If cloud moves out of screen, reset it to bottom
         if self.y < -self.size:
             self.reset()
 
     def reset(self):
-        # Removing old cloud
+        # Remove old cloud
         for part in self.cloud:
             self.canvas.delete(part)
 
@@ -54,6 +57,7 @@ class Cloud:
         self.size = random.randint(60, 120)
         self.speed = random.uniform(0.5, 1.5)
 
+        # Create new cloud
         self.cloud = self.create_cloud()
 
 
@@ -174,30 +178,27 @@ class HangmanGame:
             self.divers.append(Diver(self.canvas, 600, 800))
 
         # Title
-        self.title = self.canvas.create_text(300, 100, text="The Hangman Game",
+        self.title = self.canvas.create_text(300, 100, text="Advanced Hangman Game",
                                              font=("Impact", 35, "bold"), fill="black")
 
-        # Create buttons directly on the canvas
         self.create_buttons()
-
-        # Start animation
         self.animate()
 
 
     def create_rounded_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
         """Create a rounded rectangle on a canvas"""
         points = [
-            x1 + radius, y1,
+            x1 + radius, y1,  # Top side
             x2 - radius, y1,
-            x2, y1,
+            x2, y1,  # Top right corner
             x2, y1 + radius,
-            x2, y2 - radius,
+            x2, y2 - radius,  # Right side
             x2, y2,
-            x2 - radius, y2,
-            x1 + radius, y2,
-            x1, y2,
+            x2 - radius, y2,  # Bottom right corner
+            x1 + radius, y2,  # Bottom side
+            x1, y2,  # Bottom left corner
             x1, y2 - radius,
-            x1, y1 + radius,
+            x1, y1 + radius,  # Left side
             x1, y1
         ]
         return self.canvas.create_polygon(points, **kwargs, smooth=True)
