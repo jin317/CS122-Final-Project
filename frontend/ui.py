@@ -35,19 +35,16 @@ class Cloud:
         return [oval1, oval2, oval3]
 
     def move(self):
-        # Move cloud upward
         for part in self.cloud:
             self.canvas.move(part, 0, -self.speed)
 
-        # Update y position
         self.y -= self.speed
 
-        # If cloud moves out of screen, reset it to bottom
         if self.y < -self.size:
             self.reset()
 
     def reset(self):
-        # Remove old cloud
+        # Removing old cloud
         for part in self.cloud:
             self.canvas.delete(part)
 
@@ -57,7 +54,6 @@ class Cloud:
         self.size = random.randint(60, 120)
         self.speed = random.uniform(0.5, 1.5)
 
-        # Create new cloud
         self.cloud = self.create_cloud()
 
 
@@ -67,9 +63,8 @@ class Diver:
         self.width = width
         self.height = height
 
-        # Starting position (centered horizontally, at the top)
         self.x = width // 2
-        self.y = -50  # Start above the visible area
+        self.y = -50
 
         # Size of the diver
         self.size = 40
@@ -77,11 +72,9 @@ class Diver:
         # Falling speed
         self.speed = 3.2
 
-        # Rotation angle (for spinning effect)
         self.angle = 78
         self.spin_speed = 5
 
-        # Create the stickman
         self.parts = self.create_diver()
 
     def create_diver(self):
@@ -96,7 +89,6 @@ class Diver:
             fill="black", outline="black"
         )
 
-        # Draw body (line)
         body = self.canvas.create_line(
             self.x, self.y + head_radius,
             self.x, self.y + head_radius + body_length,
@@ -116,7 +108,6 @@ class Diver:
             fill="black", width=2
         )
 
-        # Draw legs
         left_leg = self.canvas.create_line(
             self.x, self.y + head_radius + body_length,
                     self.x - limb_length, self.y + head_radius + body_length + limb_length,
@@ -196,17 +187,17 @@ class HangmanGame:
     def create_rounded_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
         """Create a rounded rectangle on a canvas"""
         points = [
-            x1 + radius, y1,  # Top side
+            x1 + radius, y1,
             x2 - radius, y1,
-            x2, y1,  # Top right corner
+            x2, y1,
             x2, y1 + radius,
-            x2, y2 - radius,  # Right side
+            x2, y2 - radius,
             x2, y2,
-            x2 - radius, y2,  # Bottom right corner
-            x1 + radius, y2,  # Bottom side
-            x1, y2,  # Bottom left corner
+            x2 - radius, y2,
+            x1 + radius, y2,
+            x1, y2,
             x1, y2 - radius,
-            x1, y1 + radius,  # Left side
+            x1, y1 + radius,
             x1, y1
         ]
         return self.canvas.create_polygon(points, **kwargs, smooth=True)
