@@ -43,11 +43,17 @@ class Cloud:
         self.y -= self.speed
 
         # If cloud moves out of screen, reset it to bottom
+        for part in self.cloud:
+            self.canvas.move(part, 0, -self.speed)
+
+        self.y -= self.speed
+
         if self.y < -self.size:
             self.reset()
 
     def reset(self):
         # Remove old cloud
+        # Removing old cloud
         for part in self.cloud:
             self.canvas.delete(part)
 
@@ -182,6 +188,13 @@ class HangmanGame:
                                              font=("Impact", 35, "bold"), fill="black")
 
         self.create_buttons()
+        self.title = self.canvas.create_text(300, 100, text="The Hangman Game",
+                                             font=("Impact", 35, "bold"), fill="black")
+
+        # Create buttons directly on the canvas
+        self.create_buttons()
+
+        # Start animation
         self.animate()
 
 
@@ -199,6 +212,17 @@ class HangmanGame:
             x1, y2,  # Bottom left corner
             x1, y2 - radius,
             x1, y1 + radius,  # Left side
+            x1 + radius, y1,
+            x2 - radius, y1,
+            x2, y1,
+            x2, y1 + radius,
+            x2, y2 - radius,
+            x2, y2,
+            x2 - radius, y2,
+            x1 + radius, y2,
+            x1, y2,
+            x1, y2 - radius,
+            x1, y1 + radius,
             x1, y1
         ]
         return self.canvas.create_polygon(points, **kwargs, smooth=True)
